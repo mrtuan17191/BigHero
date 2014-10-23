@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<level>
+    <meta>
+    </meta>
+    <data>
+        <traps>
+            <trap x="2100" y= "55" type="208"></trap>
+        </traps>
+        <waves>
+			<wave type="50"></wave>
+            <wave type="51"></wave>
+			<wave type="53"></wave>
+			<wave type="44"></wave>
+			<wave type="45"></wave>
+            <wave type="46"></wave>
+            <wave type="47"></wave>
+			<wave type="48"></wave>
+			<wave type="49"></wave>
+			<wave type="50"></wave>
+            <wave type="51"></wave>
+            <wave type="52"></wave>
+			<wave type="53"></wave>
+			<wave type="54"></wave>
+            <wave type="55"></wave>
+			<wave type="56"></wave>
+			<wave type="57"></wave>
+        </waves>
+        <camerastart>
+            <camX x="2350"</camX>
+        </camerastart>
+    </data>
+</level>

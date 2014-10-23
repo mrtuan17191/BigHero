@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<level>
+	<meta>
+	</meta>
+	<data>
+		<waves>
+            <wave type="56"></wave>
+            <wave type="57"></wave>
+			<wave type="58"></wave>
+			<wave type="59"></wave>
+			<wave type="60"></wave>
+            <wave type="61"></wave>
+            <wave type="62"></wave>
+			<wave type="63"></wave>
+			<wave type="64"></wave>
+            <wave type="65"></wave>
+			<wave type="66"></wave>
+			<wave type="67"></wave>
+            <wave type="68"></wave>
+			<wave type="69"></wave>
+            <wave type="70"></wave>
+            <wave type="71"></wave>
+			<wave type="72"></wave>
+			<wave type="73"></wave>
+		</waves>
+        <camerastart>
+            <camX x="2400"</camX>
+        </camerastart>
+    </data>
+</level>

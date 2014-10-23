@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<root>
+	<sfx name="attack">
+		<sample filename="assets/audio/sfx/0018_highpunch_a.caf" minPitch="0.9" maxPitch="1.1" />
+		<sample filename="assets/audio/sfx/0018_highpunch_b.caf" minPitch="0.9" maxPitch="1.1" />
+		<sample filename="assets/audio/sfx/0018_highpunch_c.caf" minPitch="0.9" maxPitch="1.1" />
+	</sfx>
+	<sfx name="attack_miss">
+		<sample filename="assets/audio/sfx/combat_whoosh_1.caf" />
+		<sample filename="assets/audio/sfx/combat_whoosh_2.caf" />
+		<sample filename="assets/audio/sfx/combat_whoosh_3.caf" />
+		<sample filename="assets/audio/sfx/combat_whoosh_4.caf" />
+	</sfx>
+	<sfx name="wall_break">
+		<sample filename="assets/audio/sfx/wall_break.caf" />
+	</sfx>
+	<sfx name="wall_break_explosion">
+		<sample filename="assets/audio/sfx/wall_break_explosion.caf" />
+	</sfx>
+	<sfx name="explosion">
+		<sample filename="assets/audio/sfx/wall_break_explosion.caf" />
+	</sfx>
+	<sfx name="hurt">
+		<sample filename="assets/audio/sfx/hurt_1.caf" maxVolume="0.5" />
+		<sample filename="assets/audio/sfx/hurt_2.caf" maxVolume="0.5" />
+		<sample filename="assets/audio/sfx/hurt_3.caf" maxVolume="0.5" />
+		<sample filename="assets/audio/sfx/hurt_4.caf" maxVolume="0.5" />
+		<sample filename="assets/audio/sfx/hurt_5.caf" maxVolume="0.5" />
+		<sample filename="assets/audio/sfx/hurt_6.caf" maxVolume="0.5" />
+		<sample filename="assets/audio/sfx/hurt_7.caf" maxVolume="0.5" />
+		<sample filename="assets/audio/sfx/hurt_8.caf" maxVolume="0.5" />
+	</sfx>
+	<sfx name="die">
+		<sample filename="assets/audio/sfx/die_1.caf" />
+		<sample filename="assets/audio/sfx/die_2.caf" />
+		<sample filename="assets/audio/sfx/die_3.caf" />
+	</sfx>
+	<sfx name="laser_beam">
+		<sample filename="assets/audio/sfx/laser_gun_classic_08.caf" />
+	</sfx>	
+	<sfx name="advance_sound">
+		<sample filename="assets/audio/sfx/notifier_39.caf" />
+	</sfx>
+	<sfx name="elevator">
+		<sample filename="assets/audio/sfx/service_bell_01.caf" />
+	</sfx>	
+	<sfx name="gun_1">
+		<sample filename="assets/audio/sfx/gun_magnum1.caf" />
+	</sfx>	
+	<sfx name="typewriter">
+		<sample filename="assets/audio/sfx/typewriter_type03.caf" minPitch="0.9" maxPitch="1.1" />
+	</sfx>	
+	<sfx name="rage">
+		<sample filename="assets/audio/sfx/steamtrain_whistle02.caf" maxVolume="0.5" />
+	</sfx>	
+	<sfx name="zombie_rise">
+		<sample filename="assets/audio/sfx/dirt_collapse_01.caf" minPitch="0.9" maxPitch="1.1" />
+	</sfx>	
+	<sfx name="whip_sound">
+		<sample filename="assets/audio/sfx/whip_whoosh_03_medium_04.caf" />
+	</sfx>	
+	<sfx name="harley">
+		<sample filename="assets/audio/sfx/harley_davidson_rev_01.caf" />
+	</sfx>
+	<sfx name="forklift">
+		<sample filename="assets/audio/sfx/backhoe_idle.caf" />
+	</sfx>	
+	<sfx name="button">
+		<sample filename="assets/audio/sfx/button.caf" />
+	</sfx>
+</root>

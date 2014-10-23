@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Properties</key>
+	<dict>
+		<key>Spritesheet</key>
+		<string>assets/art/enemies/forklift/forklift.plist</string>
+	</dict>
+	<key>Animations</key>
+	<array>
+		<dict>
+			<key>Properties</key>
+			<dict>
+				<key>FPS</key>
+				<integer>10</integer>
+				<key>Animation</key>
+				<string>forklift_drive</string>
+			</dict>
+			<key>Frames</key>
+			<array>
+				<dict>
+					<key>FrameName</key>
+					<string>forklift_drive1.png</string>
+					<key>Duration</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>FrameName</key>
+					<string>forklift_drive2.png</string>
+					<key>Duration</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>FrameName</key>
+					<string>forklift_drive3.png</string>
+					<key>Duration</key>
+					<integer>1</integer>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

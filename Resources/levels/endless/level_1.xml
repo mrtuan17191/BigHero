@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<level>
+	<meta>
+	</meta>
+	<data>
+		<waves>
+			<wave type="1"></wave>
+			<wave type="3"></wave>
+			<wave type="5"></wave>
+			<wave type="7"></wave>
+            <wave type="9"></wave>
+			<wave type="10"></wave>
+			<wave type="11"></wave>
+			<wave type="75"></wave>
+		</waves>
+        <camerastart>
+            <camX x="2400"</camX>
+        </camerastart>
+    </data>
+</level>

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<level>
+	<meta>
+	</meta>
+	<data>
+        <traps>
+            <trap x="1940" y="212" type="204"></trap>
+			<trap x="1960" y="237" type="204"></trap>
+			<trap x="1980" y="262" type="204"></trap>
+            
+            <trap x="2130" y="212" type="205"></trap>
+			<trap x="2150" y="237" type="205"></trap>
+			<trap x="2170" y="262" type="205"></trap>
+            
+			<trap x="2300" y="212" type="204"></trap>
+			<trap x="2320" y="237" type="204"></trap>
+			<trap x="2340" y="262" type="204"></trap>
+        </traps>
+		<waves>
+			<wave type="28"></wave>
+            <wave type="29"></wave>
+			<wave type="30"></wave>
+			<wave type="31"></wave>
+            <wave type="32"></wave>
+            <wave type="33"></wave>
+			<wave type="34"></wave>
+			<wave type="35"></wave>
+            <wave type="36"></wave>
+            <wave type="37"></wave>
+			<wave type="38"></wave>
+			<wave type="39"></wave>
+			<wave type="40"></wave>
+		</waves>
+        <camerastart>
+            <camX x="2400"</camX>
+        </camerastart>
+    </data>
+</level>

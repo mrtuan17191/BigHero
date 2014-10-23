@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<level>
+	<meta>
+	</meta>
+	<data>
+		<waves>
+			<wave type="12"></wave>
+			<wave type="13"></wave>
+			<wave type="14"></wave>
+            <wave type="15"></wave>
+			<wave type="16"></wave>
+			<wave type="17"></wave>
+            <wave type="18"></wave>
+            <wave type="19"></wave>
+			<wave type="20"></wave>
+			<wave type="21"></wave>
+            <wave type="22"></wave>
+            <wave type="23"></wave>
+			<wave type="24"></wave>
+			<wave type="25"></wave>
+			<wave type="26"></wave>
+            <wave type="27"></wave>
+		</waves>
+        <camerastart>
+            <camX x="2400"</camX>
+        </camerastart>
+    </data>
+</level>
