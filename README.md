@@ -17,9 +17,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 		int a = 13;
 		System.out.println("Haha");
     }
+=======
+fuck fuck fuck;
+}
+>>>>>>> FETCH_HEAD
 =======
 fuck fuck fuck;
 }
@@ -81,7 +86,12 @@ void AppDelegate::applicationDidEnterBackground() {
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Utils::random();
+=======
+    afjklasjflkasflkaslfaslfjaslkf
+afjlasfjaklskajlsfsfal
+>>>>>>> FETCH_HEAD
 =======
     afjklasjflkasflkaslfaslfjaslkf
 afjlasfjaklskajlsfsfal
