@@ -19,6 +19,7 @@ protected:
     StatusBar* hpBar;
     StatusBar* angryBar;
     StatusBar* weaponBar;
+    StatusBar* bossBar;
     Label* gameTimeLabel;
     Label* scoreLabel;
 private:

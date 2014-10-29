@@ -26,6 +26,9 @@ void ControllerLayer::initialize() {
 }
 
 void ControllerLayer::createLayers() {
+//    UGLayerColor* layerColoer = UGLayerColor::create();
+//    layerColoer->initWithColor(Color4B(0, 0, 0, 100));
+//    this->addChild(layerColoer);
     /* background */
     Face* bg = new Face();
     bg->initWithFile(ANI_JOYSTICK_BACKGROUND);
@@ -52,7 +55,9 @@ bool ControllerLayer::onTouchBegan(Touch* touch, Event* event) {
     Size contentSize = this->getParent()->getContentSize();
     Point center = this->getParent()->getPosition() + Point(contentSize.width / 2, contentSize.height / 2);
     if (Utils::isPointInRectangle(point, center, contentSize.width, contentSize.height)) {
+        //new point same as point
         Point newPoint = point - this->getParent()->getPosition();
+        
         this->setPosition(newPoint - this->kCenter);
         this->isPressed = true;
         this->setVisible(true);

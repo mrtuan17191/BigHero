@@ -311,35 +311,39 @@ void GameScene::processEvent(GameEvent* gameEvent) {
             this->mainLayer->addChild(bg1Face);
             Size bg1FaceSize = bg1Face->getContentSize();
             
-            char bg2Path[200];
-            sprintf(bg2Path, ANI_MAP, chapter, chapterLevel, 2);
-            Face* bg2Face = new Face();
-            bg2Face->initWithSpriteFrameName(bg2Path);
-            bg2Face->setAnchorPoint(Point::ZERO);
-            bg2Face->setPosition(Point(bg1FaceSize.width * CONF_SCALE_GAME, 0));
-            bg2Face->setScale(CONF_SCALE_GAME);
-            bg2Face->getTexture()->setAliasTexParameters();
-            this->mainLayer->addChild(bg2Face);
-            Size bg2FaceSize = bg2Face->getContentSize();
-            
-            // create endzone
-            if (gameModel->getCurrentLevel()->getStops()->size() > 0) {
-                float totalMapWidth = bg2Face->getPosition().x + bg2FaceSize.width * CONF_SCALE_GAME;
-                Face* endZone = new Face();
-                endZone->initWithFile(ANI_END_ZONE);
-                endZone->setPosition(totalMapWidth - endZone->getContentSize().width / 2, CONF_END_ZONE_Y);
-                this->mainLayer->addChild(endZone);
-                {
-                    FadeTo* fadeIn = FadeTo::create(1, 127);
-                    FadeTo* fadeOut = FadeTo::create(1, 255);
-                    Sequence* pulseSequence = Sequence::create(fadeIn, fadeOut, NULL);
-                    RepeatForever* repeat = RepeatForever::create(pulseSequence);
-                    endZone->runAction(repeat);
+            if (chapterLevel % 4 != 0) {
+                char bg2Path[200];
+                sprintf(bg2Path, ANI_MAP, chapter, chapterLevel, 2);
+                Face* bg2Face = new Face();
+                bg2Face->initWithSpriteFrameName(bg2Path);
+                bg2Face->setAnchorPoint(Point::ZERO);
+                bg2Face->setPosition(Point(bg1FaceSize.width * CONF_SCALE_GAME, 0));
+                bg2Face->setScale(CONF_SCALE_GAME);
+                bg2Face->getTexture()->setAliasTexParameters();
+                this->mainLayer->addChild(bg2Face);
+                Size bg2FaceSize = bg2Face->getContentSize();
+                
+                
+                // create endzone
+                if (gameModel->getCurrentLevel()->getStops()->size() > 0) {
+                    float totalMapWidth = bg2Face->getPosition().x + bg2FaceSize.width * CONF_SCALE_GAME;
+                    Face* endZone = new Face();
+                    endZone->initWithFile(ANI_END_ZONE);
+                    endZone->setPosition(totalMapWidth - endZone->getContentSize().width / 2, CONF_END_ZONE_Y);
+                    this->mainLayer->addChild(endZone);
+                    {
+                        FadeTo* fadeIn = FadeTo::create(1, 127);
+                        FadeTo* fadeOut = FadeTo::create(1, 255);
+                        Sequence* pulseSequence = Sequence::create(fadeIn, fadeOut, NULL);
+                        RepeatForever* repeat = RepeatForever::create(pulseSequence);
+                        endZone->runAction(repeat);
+                    }
+                    DataEvent* dataEvent = new DataEvent();
+                    dataEvent->setEventCode(EVT_CREATE_END_ZONE);
+                    dataEvent->setArgumentPoint(Point(endZone->getContentSize().width, endZone->getContentSize().height));
+                    this->fireEvent(dataEvent);
                 }
-                DataEvent* dataEvent = new DataEvent();
-                dataEvent->setEventCode(EVT_CREATE_END_ZONE);
-                dataEvent->setArgumentPoint(Point(endZone->getContentSize().width, endZone->getContentSize().height));
-                this->fireEvent(dataEvent);
+
             }
             
             // charactes
@@ -371,6 +375,26 @@ void GameScene::processEvent(GameEvent* gameEvent) {
             for (int i = 0; i < gameModel->getCurrentLevel()->getBarrels()->size(); i++) {
                 Barrel* barrel = gameModel->getCurrentLevel()->getBarrels()->at(i);
                 this->addFacesToLayer(barrel, this->mainLayer, 0);
+            }
+            
+            //elevators
+            for (int i = 0; i < gameModel->getCurrentLevel()->getElevators()->size(); i++) {
+                Elevator* elevator = gameModel->getCurrentLevel()->getElevators()->at(i);
+                this->addFacesToLayer(elevator, this->mainLayer, 0);
+            }
+            
+            //boss
+            if (gameModel->getCurrentLevel()->getBoss() != NULL) {
+                this->addFacesToLayer(gameModel->getCurrentLevel()->getBoss(), this->mainLayer, 0);
+            }
+            
+            //boss HP
+            if (gameModel->getCurrentLevel()->getBoss() != NULL) {
+                this->bossBar = new StatusBar();
+                this->bossBar->initWithParameter((char*) ANI_BAR_HP, (char*) ANI_BAR_HP_CONTENT);
+                this->bossBar->setValue(1);
+                this->bossBar->setPosition(Point(gameModel->getDisplayResolutionSize().width/2, this->gameTimeLabel->getPosition().y - this->gameTimeLabel->getContentSize().height/2 - this->bossBar->getContentSize().height/2 - 45));
+                this->guiLayer->addChild(this->bossBar);
             }
             break;
         }
@@ -509,10 +533,13 @@ void GameScene::almostDieCallback(Ref* sender) {
 void GameScene::addFacesToLayer(Obj* object, Layer* layer, int index) {
     for (int i = 0; i < object->getFaces()->count(); i++) {
         Face* node = (Face*) object->getFaces()->getObjectAtIndex(i);
-        node->setPosition(object->getPosition());
+        node->setPosition(object->getPosition() + node->getOOVector());
         node->setAnchorPoint(object->getBody()->getAnchorPoint());
         node->setFlippedX(object->getBody()->isFlipX());
         node->setScale(object->getBody()->getScale());
+        if (strcmp(node->getName(), FACE_SHADOW) == 0) {
+            node->setScale(object->getBody()->getScale() * 0.25f);
+        }
         node->setVisible(object->getBody()->isVisible());
         layer->addChild(node, index);
     }
@@ -540,6 +567,11 @@ void GameScene::update(float dt) {
         // update bars
         float hpPercent = gameModel->getCurrentLevel()->getMan()->getHP() / CONF_MAN_HP;
         this->hpBar->setValue(hpPercent);
+        
+        if (gameModel->getCurrentLevel()->getBoss() != NULL) {
+            float bossPercent = gameModel->getCurrentLevel()->getBoss()->getHP() / CONF_MAN_HP;
+            this->bossBar->setValue(bossPercent);
+        }
         
         float apPercent = gameModel->getCurrentLevel()->getMan()->getAP() / CONF_MAN_ANGRY;
         this->angryBar->setValue(apPercent);
@@ -605,6 +637,19 @@ void GameScene::update(float dt) {
             }
             if (strcmp(face->getName(), FACE_CHAR) == 0) {
                 face->getParent()->reorderChild(face, gameModel->getDisplayResolutionSize().height - man->getPosition().y);
+            }
+        }
+        
+        if (gameModel->getCurrentLevel()->getBoss() != NULL) {
+            Zombie* boss = gameModel->getCurrentLevel()->getBoss();
+            for (int j = 0; j < boss->getFaces()->count(); j++) {
+                Face* face = (Face*) boss->getFaces()->getObjectAtIndex(j);
+                if (strcmp(face->getName(), FACE_SHADOW) == 0) {
+                    face->getParent()->reorderChild(face, gameModel->getDisplayResolutionSize().height - boss->getPosition().y);
+                }
+                if (strcmp(face->getName(), FACE_CHAR) == 0) {
+                    face->getParent()->reorderChild(face, gameModel->getDisplayResolutionSize().height - boss->getPosition().y);
+                }
             }
         }
     }

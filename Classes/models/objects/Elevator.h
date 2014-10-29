@@ -12,6 +12,7 @@ protected:
 public:
     Elevator(int type, Point pos);
     virtual ~Elevator();
+    void initFaces(std::string key, __Array* faceStates);
 };
 
 #endif

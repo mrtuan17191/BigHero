@@ -41,7 +41,7 @@ Zombie::~Zombie() {
 
 void Zombie::initBody() {
     string frameName = ANI_SHADOW_2;
-    if (this->isDriveType()) {
+    if (this->isDriveType() || this->isBossType()) {
         frameName = ANI_SHADOW_3;
     }
     Face* shadowFace = new Face();
@@ -83,6 +83,14 @@ void Zombie::initBody() {
         this->vitality = 1;
         this->runVelocity = 60;
     }
+    
+    //BOSS
+    if (this->getType() == KEY_BOSS1) {
+        this->attackableX = 30;
+        this->attackableY = 5;
+        
+        this->runVelocity = 50;
+    }
 }
 
 void Zombie::initFaces(std::string key, __Array* faceStates) {
@@ -93,6 +101,9 @@ void Zombie::initFaces(std::string key, __Array* faceStates) {
     float minVector = CONF_MAN_MIN_VECTOR_Y;
     if (this->isDriveType()) {
         minVector = 35;
+    }
+    if (this->isBossType()) {
+        minVector = 28;
     }
     charFace->setOOVector(Point(0, minVector));
     this->currentVectorY = minVector;
@@ -177,6 +188,13 @@ bool Zombie::isDriveType() {
 
 bool Zombie::isBlockType() {
     if(this->type == KEY_RIOT_COP) {
+        return true;
+    }
+    return false;
+}
+
+bool Zombie::isBossType() {
+    if (this->type == KEY_BOSS1 || this->type == KEY_BOSS2 || this->type == KEY_BOSS3 || this->type == KEY_BOSS4 || this->type == KEY_BOSS5) {
         return true;
     }
     return false;

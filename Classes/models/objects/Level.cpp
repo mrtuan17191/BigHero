@@ -4,6 +4,7 @@ Level::Level(int level) {
     this->autorelease();
     this->level = level;
     this->man = NULL;
+    this->boss = NULL;
     
     this->stops = new Vector<__Float*>();
     this->spawnPoints = new Vector<SpawnPoint*>();
@@ -24,6 +25,7 @@ Level::Level(int level) {
 Level::~Level() {
     Utils::safeRelease(this->man);
     Utils::safeRelease(this->endZoneBody);
+    Utils::safeRelease(this->boss);
     CC_SAFE_DELETE(this->stops);
     CC_SAFE_DELETE(this->spawnPoints);
     CC_SAFE_DELETE(this->walls);
@@ -55,6 +57,11 @@ void Level::update(float dt) {
     for (int i = 0; i < this->zombies->size(); i++) {
         Zombie* zombie = this->zombies->at(i);
         this->updateZombie(zombie, dt);
+    }
+    
+    // update boss
+    if (this->boss != NULL) {
+        this->updateBoss(dt);
     }
     
     // update barrels
@@ -127,31 +134,34 @@ void Level::update(float dt) {
     }
     
     // finish
-    if (this->endZoneBody != NULL) {
-        if (Utils::b2Interact(this->man->getBody(), this->endZoneBody)) {
-            this->man->setDisappear(true);
-            this->man->getBody()->setVelocity(Point(CONF_MAN_DISAPPEAR_VELOCITY, 0));
-        }
-    }
-    
-    if (this->reachCheckPoint) {
-        bool noMoreZombie = true;
-        for (int i = 0; i < this->zombies->size(); i++) {
-            Zombie* zombie = this->zombies->at(i);
-            if (zombie->isCalled()) {
-                noMoreZombie = false;
-                break;
+    if (this->level % 4 != 0) {
+        if (this->endZoneBody != NULL) {
+            if (Utils::b2Interact(this->man->getBody(), this->endZoneBody)) {
+                this->man->setDisappear(true);
+                this->man->getBody()->setVelocity(Point(CONF_MAN_DISAPPEAR_VELOCITY, 0));
             }
         }
         
-        if (noMoreZombie) {
-            GameEvent* gameEvent = new GameEvent();
-            gameEvent->setEventCode(EVT_NEXT_CHECK_POINT);
-            gameModel->fireEvent(gameEvent);
-            this->reachCheckPoint = false;
+        if (this->reachCheckPoint) {
+            bool noMoreZombie = true;
+            for (int i = 0; i < this->zombies->size(); i++) {
+                Zombie* zombie = this->zombies->at(i);
+                if (zombie->isCalled()) {
+                    noMoreZombie = false;
+                    break;
+                }
+            }
+            
+            if (noMoreZombie) {
+                GameEvent* gameEvent = new GameEvent();
+                gameEvent->setEventCode(EVT_NEXT_CHECK_POINT);
+                gameModel->fireEvent(gameEvent);
+                this->reachCheckPoint = false;
+            }
         }
+    } else {
+        
     }
-    
     // update appearing
     if (this->man->isAppear()) {
         if (this->man->getPosition().x > CONF_DISTANCE_TO_APPEAR) {
@@ -413,8 +423,6 @@ void Level::updateZombie(Zombie* zombie, float dt) {
     if (abs(vectorToMove.x) > 100) {
         vectorToMove.y = 0;
     }
-    
-    //DONE DONE DONE
     
     // protected range and attack range collide, zombie will
     // go to correct attack side
@@ -700,6 +708,73 @@ void Level::updateZombie(Zombie* zombie, float dt) {
     zombie->setState(zombieState, (char*) FACE_CHAR);
 }
 
+void Level::updateBoss(float dt) {
+    GameModel* gameModel = GameModel::getInstance();
+    this->boss->update(dt);
+
+    char* bossState = (char*) STATE_IDLE;
+    RectBody* manBody = (RectBody*) this->man->getBody();
+    RectBody* bossBody = (RectBody*) this->boss->getBody();
+
+    // check boss position has touch limit above or limit below
+    bool isTouchLimit = false;
+    float topBossPos = this->boss->getPosition().y + bossBody->getHeight() / 2;
+    float bottomBossPos = this->boss->getPosition().y - bossBody->getHeight() / 2;
+    
+    if (topBossPos > this->blockUp) {
+        this->boss->setPosition(Point(this->boss->getPosition().x, this->blockUp - bossBody->getHeight() / 2));
+        isTouchLimit = true;
+    }
+    if (bottomBossPos < this->blockDown) {
+        this->boss->setPosition(Point(this->boss->getPosition().x, this->blockDown + bossBody->getHeight() / 2));
+        isTouchLimit = true;
+    }
+
+    // calculate vector to man
+    Point vectorToMan = Point(manBody->getPosition() - bossBody->getPosition());
+    Point vectorToMove = vectorToMan;
+    
+    // determite zombie velocity based on vector to move calculated
+    float angle = atan2(vectorToMove.x, vectorToMove.y);
+    float velocityX = this->boss->getRunVelocity() * sin(angle);
+    float velocityY = this->boss->getRunVelocity() * cos(angle);
+    
+    RectBody* moveToManRange = new RectBody(manBody->getWidth() * 5, gameModel->getDisplayResolutionSize().height/2);
+    moveToManRange->setPosition(manBody->getPosition());
+    
+    if (Utils::b2Interact(bossBody, moveToManRange)) {
+        this->boss->getBody()->setVelocity(Point(velocityX, velocityY));
+    } else {
+        this->boss->getBody()->setVelocity(Point(velocityX, 0));
+    }
+
+    
+    if (vectorToMan.x > 0) {
+        this->boss->getBody()->setFlipX(false);
+    }
+    if (vectorToMan.x < 0) {
+        this->boss->getBody()->setFlipX(true);
+    }
+    
+    if (abs(vectorToMan.y) < this->boss->getAttackableY() &&
+        abs(vectorToMan.x) < this->boss->getAttackableX()) {
+        
+        this->boss->getBody()->setVelocity(Point::ZERO);
+        this->boss->punch();
+        bossState = (char*) STATE_ATTACK;
+        
+    } else {
+        bossState = (char*) STATE_RUN;
+    }
+    
+    // update shadow's scale
+    this->boss->updateShadow();
+    
+    // update boss animation
+    this->boss->setState(bossState, (char*) FACE_CHAR);
+
+}
+
 void Level::loadMap() {
     GameModel* gameModel = GameModel::getInstance();
     int chapterIndex = gameModel->getMapData()->getChapter(this->level);
@@ -719,7 +794,7 @@ void Level::loadMap() {
         Json* spawn_points = Json_getItem(level, "spawn_points");
         Json* elevators = Json_getItem(level, "elevators");
 //        Json* traps = Json_getItem(level, "traps");
-//        Json* bosses = Json_getItem(level, "bosses");
+        Json* boss = Json_getItem(level, "bosses");
         Json* walls = Json_getItem(level, "walls");
         
         if (barrels != NULL) {
@@ -781,6 +856,21 @@ void Level::loadMap() {
                 this->walls->pushBack(newItem);
             }
         }
+        
+        if (boss != NULL) {
+            Json* item = Json_getItemAt(boss, 0);
+            float x = atof(Json_getString(item, "-x", ""));
+            float y = atof(Json_getString(item, "-y", ""));
+            int type = atoi(Json_getString(item, "-type", ""));
+            
+            std::string zombieType = "boss" + std::to_string(type);
+
+            this->boss = new Zombie(zombieType);
+            this->boss->initFaces(zombieType, gameModel->getAnimations());
+            this->boss->setPosition(Point(x - 30, y - 65));
+            this->boss->getBody()->setFlipX(true);
+            CC_SAFE_RETAIN(this->boss);
+        }
     }
     
     this->man = new Man();
@@ -789,37 +879,47 @@ void Level::loadMap() {
     this->man->getBody()->setVelocity(Point(CONF_MAN_APPEAR_VELOCITY, 0));
     CC_SAFE_RETAIN(this->man);
     
+    this->blockLeft = 0;
     if (this->stops->size() > 0) {
-        this->blockLeft = 0;
+        
         this->blockRight = this->stops->at(this->currentCheckPoint)->getValue();
-        this->blockUp = CONF_MAX_Y;
-        this->blockDown = CONF_MIN_Y;
-        
-        // init position
-        float realWidth = this->blockRight - this->blockLeft;
-        float darkX = realWidth - gameModel->getDisplayResolutionSize().width;
-        
-        //float distanceWidth = this->blockRight - this->blockLeft;
-        float distanceToFollowX = (realWidth - darkX) / 2;
-        
-        RectBody* manBody = (RectBody*) this->man->getBody();
-        if (distanceToFollowX > 0) {
-            float distanceMinX = manBody->getPosition().x - this->blockLeft - distanceToFollowX;
-            if (distanceMinX > 0) {
-                float distanceMaxX = this->blockRight - manBody->getPosition().x;
-                if (distanceMaxX > distanceToFollowX) {
-                    this->airX = distanceMinX;
-                }
+    } else {
+        this->blockRight = gameModel->getDisplayResolutionSize().width;
+    }
+    this->blockUp = CONF_MAX_Y;
+    this->blockDown = CONF_MIN_Y;
+    
+    // init position
+    float realWidth = this->blockRight - this->blockLeft;
+    float darkX = realWidth - gameModel->getDisplayResolutionSize().width;
+    
+    //float distanceWidth = this->blockRight - this->blockLeft;
+    float distanceToFollowX = (realWidth - darkX) / 2;
+    
+    RectBody* manBody = (RectBody*) this->man->getBody();
+    if (distanceToFollowX > 0) {
+        float distanceMinX = manBody->getPosition().x - this->blockLeft - distanceToFollowX;
+        if (distanceMinX > 0) {
+            float distanceMaxX = this->blockRight - manBody->getPosition().x;
+            if (distanceMaxX > distanceToFollowX) {
+                this->airX = distanceMinX;
             }
         }
-        
-        float maxDarkX = this->blockRight - distanceToFollowX;
-        if (manBody->getPosition().x >= maxDarkX) {
-            this->airX = maxDarkX - this->blockLeft - distanceToFollowX;
-        }
     }
+    
+    float maxDarkX = this->blockRight - distanceToFollowX;
+    if (manBody->getPosition().x >= maxDarkX) {
+        this->airX = maxDarkX - this->blockLeft - distanceToFollowX;
+    }
+    
 
     this->callEnemies();
+    
+    for (int i = 0; i < this->elevators->size(); i++) {
+        Elevator* elevator= this->elevators->at(i);
+        elevator->initFaces(KEY_DOORS, gameModel->getAnimations());
+        elevator->setPosition(elevator->getPos() + Point(CONF_DOOR_X, CONF_DOOR_Y));
+    }
 }
 
 void Level::nextCheckPoint() {
@@ -1072,7 +1172,19 @@ void Level::callEnemies() {
         SpawnPoint* spawnPoint = this->spawnPoints->at(i);
         Vector<Zombie*>* enemyInfos = new Vector<Zombie*>();
 
-        enemyInfos->pushBack(new Zombie(KEY_WORKER, Point(200, 100)));
+        if (spawnPoint->getType() == 2) {
+            enemyInfos->pushBack(new Zombie(KEY_GUARD, Point(300, 180)));
+            enemyInfos->pushBack(new Zombie(KEY_GUARD, Point(300, -180)));
+        } else if (spawnPoint->getType() == 3) {
+            enemyInfos->pushBack(new Zombie(KEY_GUARD, Point(0,0)));
+            enemyInfos->pushBack(new Zombie(KEY_GUARD, Point(200,0)));
+            enemyInfos->pushBack(new Zombie(KEY_GUARD, Point(-200,0)));
+        } else if (spawnPoint->getType() == 4) {
+            enemyInfos->pushBack(new Zombie(KEY_GUARD, Point(300, 180)));
+            enemyInfos->pushBack(new Zombie(KEY_CODER, Point(300,-180)));
+            enemyInfos->pushBack(new Zombie(KEY_CODER, Point(-300, -180)));
+        }
+//        enemyInfos->pushBack(new Zombie(KEY_WORKER, Point(200, 100)));
 //        if (spawnPoint->getType() == 1) {
 //            enemyInfos->pushBack(new Zombie(KEY_ZOMBIE, Point(200, 100)));
 //            enemyInfos->pushBack(new Zombie(KEY_ZOMBIE, Point(200, 100)));

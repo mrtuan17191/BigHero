@@ -46,6 +46,7 @@ public:
     bool isFireType();
     bool isDriveType();
     bool isBlockType();
+    bool isBossType();
     bool aim(float dt);
     void updateShadow();
 };

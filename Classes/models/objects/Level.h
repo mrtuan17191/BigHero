@@ -27,6 +27,7 @@ class Level : public Ref {
     UG_PROPERTY_GETTER(Vector<Zombie*>*, zombies, Zombies);
     UG_PROPERTY_GETTER(Vector<TheShot*>*, shots, Shots);
     UG_PROPERTY_FULL(RectBody*, endZoneBody, EndZoneBody);
+    UG_PROPERTY_GETTER(Zombie*, boss, Boss);
     
     UG_PROPERTY_GETTER(float, blockLeft, BlockLeft);
     UG_PROPERTY_GETTER(float, blockRight, BlockRight);
@@ -45,6 +46,7 @@ private:
     
     void updateMan(float dt);
     void updateZombie(Zombie* zombie, float dt);
+    void updateBoss(float dt);
 public:
     Level(int level);
     virtual ~Level();
