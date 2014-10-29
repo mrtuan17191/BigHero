@@ -78,5 +78,5 @@ void AppDelegate::applicationWillEnterForeground() {
     Director::getInstance()->startAnimation();
 
     SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-    SimpleAudioEngine::getInstance()->resumeAllEffects();
+SimpleAudioEngine::getInstance()->tessttttt();
 }
