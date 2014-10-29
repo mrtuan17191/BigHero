@@ -16,9 +16,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Dire2tor::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLView::create("Gravity Duck");
-        director->setOpenGLView(glview);
-    }
+fuck fuck fuck;
+}
     
     FileUtils *fileUtils = FileUtils::getInstance();
 	std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
@@ -75,8 +74,6 @@ void AppDelegate::applicationDidEnterBackground() {
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
-    Director::getInstance()->startAnimation();
-
-    SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-SimpleAudioEngine::getInstance()->tessttttt();
+    afjklasjflkasflkaslfaslfjaslkf
+afjlasfjaklskajlsfsfal
 }
