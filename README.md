@@ -16,9 +16,14 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Dire2tor::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLView::create("Gravity Duck");
-        director->setOpenGLView(glview);
+<<<<<<< HEAD
+		int a = 13;
+		System.out.println("Haha");
     }
+=======
+fuck fuck fuck;
+}
+>>>>>>> FETCH_HEAD
     
     FileUtils *fileUtils = FileUtils::getInstance();
 	std::vector<std::string> searchPaths = fileUtils->getSearchPaths();
@@ -50,7 +55,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     SimpleAudioEngine* simpleAudioEngine = SimpleAudioEngine::getInstance();
     simpleAudioEngine->preloadEffect(soundModel->getSoundFilePath(EF_DIE));
     simpleAudioEngine->preloadEffect(soundModel->getSoundFilePath(EF_FLIP));
-    simpleAudioEngine->preloadEffect(soundModel->getSoundFilePath(EF_PICK_UP));
+    simpleAudioEngine->preloadEffect(soundModel->getSoundFilePath(EF_PICK_DOWN));
     simpleAudioEngine->preloadEffect(soundModel->getSoundFilePath(EF_ROTATE));
     simpleAudioEngine->preloadEffect(soundModel->getSoundFilePath(EF_TELEPORT));
 
@@ -75,8 +80,10 @@ void AppDelegate::applicationDidEnterBackground() {
 
 // this function will be called when the app is active again
 void AppDelegate::applicationWillEnterForeground() {
-    Director::getInstance()->startAnimation();
-
-    SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-SimpleAudioEngine::getInstance()->tessttttt();
+<<<<<<< HEAD
+	Utils::random();
+=======
+    afjklasjflkasflkaslfaslfjaslkf
+afjlasfjaklskajlsfsfal
+>>>>>>> FETCH_HEAD
 }
